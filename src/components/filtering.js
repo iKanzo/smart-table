@@ -14,8 +14,13 @@ export function initFiltering(elements) {
         if (action && action.dataset && action.dataset.filterName) {
              const filterName = action.dataset.filterName;
              const filterValue = action.value || "all";
-             state.filters = state.filters || {};
-               state.filters[filterName] = filterValue;
+
+            if (filterValue === "all") {
+                // Очищаем фильтр, если выбрано "all"
+                delete state.filters[filterName];
+            } else {
+                state.filters[filterName] = filterValue;
+            }
         }
 
         const filter = {};

@@ -11,7 +11,6 @@ export function initTable(settings, onAction) {
     const {tableTemplate, rowTemplate, before, after} = settings;
     const root = cloneTemplate(tableTemplate);
 
-    // @todo: #1.2 —  вывести дополнительные шаблоны до и после таблицы
     root.beforeElements = {};
     root.afterElements = {};
 
@@ -31,10 +30,7 @@ export function initTable(settings, onAction) {
         });
     }
 
-    // @todo: #1.3 —  обработать события и вызвать onAction()
-    root.container.addEventListener('change', () => {
-        onAction();
-    });
+    root.container.addEventListener("change", onAction); //исправление безымянной функции
 
     root.container.addEventListener('reset', () => {
         setTimeout(() => {
@@ -47,19 +43,28 @@ export function initTable(settings, onAction) {
         onAction(e.submitter);
     });
 
+
     const render = (data) => {
-        // @todo: #1.1 — преобразовать данные в массив строк на основе шаблона rowTemplate
         const nextRows = data.map(item => {
-            const row = cloneTemplate(rowTemplate)
+            const row = cloneTemplate(rowTemplate);
+
             Object.keys(item).forEach(key => {
-                if (row.elements[key]) {
-                    row.elements[key].textContent = item[key];
+                const el = row.elements[key];
+                if (!el) return;
+
+                if (el.tagName === 'INPUT' || el.tagName === 'SELECT') {
+                    el.value = item[key]; // для input и select используем value
+                } else {
+                    el.textContent = item[key]; // для остальных элементов используем textContent
                 }
-            })
+            });
+
             return row.container;
         });
+
         root.elements.rows.replaceChildren(...nextRows);
-    }
+    };
+
 
     return {...root, render};
 }

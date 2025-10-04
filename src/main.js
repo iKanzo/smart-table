@@ -55,10 +55,8 @@ const sampleTable = initTable({
     after: ['pagination']
 }, render);
 
-const applySearching = initSearching(
-    sampleTable.search.elements.searchInput,
-    "search"
-);
+const searchEl = sampleTable.search.elements.searchInput ?? sampleTable.search.elements.search;
+const applySearching = initSearching(searchEl, "search");
 
 const { updateIndexes, applyFiltering } = initFiltering(sampleTable.filter.elements);
 

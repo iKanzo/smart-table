@@ -33,6 +33,16 @@ export function initSearching(searchInput, searchField) {
                         }
                     });
 
+                    form.querySelectorAll('button[data-field]').forEach(btn => {
+                        btn.dataset.value = 'none';
+                    });
+
+                    const firstPage = form.querySelector('input[name="page"]');
+                    if (firstPage) {
+                        firstPage.value = '1';
+                        firstPage.checked = true;
+                    }
+
                     submitForm();
                 });
             }
@@ -45,10 +55,7 @@ export function initSearching(searchInput, searchField) {
 
                     const field = button.dataset.field;
                     const input = form.querySelector(`input[name="${field}"]`);
-
-                    if (input) {
-                        input.value = '';
-                    }
+                    if (input) input.value = '';
 
                     submitForm();
                 });

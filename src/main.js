@@ -80,6 +80,7 @@ const {applyPagination, updatePagination}  = initPagination(
 const appRoot = document.querySelector('#app');
 appRoot.appendChild(sampleTable.container);
 
+
 async function init() {
     const indexes = await API.getIndexes();
 

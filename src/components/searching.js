@@ -17,15 +17,45 @@ export function initSearching(searchInput, searchField) {
                 t = setTimeout(submitForm, 180);
             });
 
+            //при сбросе данные по умолчанию
             const resetBtn = form.querySelector('[data-name="reset"], button[type="reset"]');
             if (resetBtn) {
-                resetBtn.addEventListener('click', () => {
-                    setTimeout(submitForm, 0);
+                resetBtn.addEventListener('click', (event) => {
+                    event.preventDefault();
+
+                    form.querySelectorAll('input, select').forEach(el => {
+                        if (el.type === 'radio' || el.type === 'checkbox') {
+                            el.checked = false;
+                        } else if (el.tagName.toLowerCase() === 'select') {
+                            el.selectedIndex = 0;
+                        } else {
+                            el.value = '';
+                        }
+                    });
+
+                    submitForm();
                 });
             }
+
+            //очистка полей ввода
+            const clearButtons = form.querySelectorAll('button[name="clear"]');
+            clearButtons.forEach(button => {
+                button.addEventListener('click', (event) => {
+                    event.preventDefault();
+
+                    const field = button.dataset.field;
+                    const input = form.querySelector(`input[name="${field}"]`);
+
+                    if (input) {
+                        input.value = '';
+                    }
+
+                    submitForm();
+                });
+            });
         }
     }
-    
+
     return (query, state, action) => {
         const value = (state.filters?.[searchField] ?? state[searchField] ?? "").trim();
         return value ? Object.assign({}, query, { search: value }) : query;
